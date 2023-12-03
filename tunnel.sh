@@ -1,16 +1,24 @@
 #!/bin/env bash
 set -Eeuo pipefail
 
+help=
+local_port=
+remote_address=
+remote_port=
+
 while [ $# -gt 0 ]; do
     case "$1" in
+    -h | --help)
+        help=1
+        ;;
     -l | --local-port)
-        local_port="$2"
+        local_port="${2:-''}"
         ;;
     -r | --remote)
-        remote_address="$2"
+        remote_address="${2:-''}"
         ;;
     -p | --port)
-        remote_port="$2"
+        remote_port="${2:-''}"
         ;;
     *)
         echo "Invalid argument '$1'"
@@ -18,8 +26,14 @@ while [ $# -gt 0 ]; do
         ;;
     esac
     shift
-    shift
+    [[ $# -gt 0 ]] && shift
 done
+
+function main() {
+    while [ : ]; do
+        socat -d -d tcp:$remote_address:$remote_port,forever,intervall=1,fork,reuseaddr tcp:localhost:$local_port
+    done
+}
 
 function validate_arguments() {
     local error=0
@@ -38,8 +52,8 @@ function validate_arguments() {
         error=1
     fi
 
-    if ! which socat; then
-        echo "Socat not found. install socat."
+    if ! which socat 2>&1 >/dev/null; then
+        echo "Socat not found. Install socat."
         error=1
     fi
 
@@ -48,11 +62,20 @@ function validate_arguments() {
     fi
 }
 
-function main() {
-    while [ : ]; do
-        socat -d -d tcp:$remote_address:$remote_port,forever,intervall=1,fork,reuseaddr tcp:localhost:$local_port
-    done
+function print_help() {
+   cat <<'EOF'
+./tunnel.sh -l|--local-port [local app port] -r|--remote [remote address] -p|--port [port] 
+
+[local app port] - local app port. 22 for ssh server.
+[remote address] - public client address
+[port] - public client port. You can use any unassigned port.
+EOF
 }
+
+if [ ! -z ${help+x} ]; then
+    print_help
+    exit 0
+fi
 
 validate_arguments
 main

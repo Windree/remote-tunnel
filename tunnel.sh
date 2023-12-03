@@ -1,5 +1,5 @@
 #!/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 help=
 local_port=
@@ -12,13 +12,13 @@ while [ $# -gt 0 ]; do
         help=1
         ;;
     -l | --local-port)
-        local_port="${2:-''}"
+        local_port="${2:-}"
         ;;
     -r | --remote)
-        remote_address="${2:-''}"
+        remote_address="${2:-}"
         ;;
     -p | --port)
-        remote_port="${2:-''}"
+        remote_port="${2:-}"
         ;;
     *)
         echo "Invalid argument '$1'"
@@ -72,7 +72,7 @@ function print_help() {
 EOF
 }
 
-if [ ! -z ${help+x} ]; then
+if [ ! -z ${help:-} ]; then
     print_help
     exit 0
 fi

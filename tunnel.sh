@@ -1,5 +1,5 @@
 #!/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 while [ $# -gt 0 ]; do
     case "$1" in

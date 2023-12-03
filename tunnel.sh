@@ -67,7 +67,7 @@ function print_help() {
 ./tunnel.sh -h|--help |(-l|--local-port [local app port] -r|--remote [remote address] -p|--port [port])
 
 -h --help - show a help
--l --local-port [local app port] - local app port. 22 for ssh server.
+-l --local-port [local app port] - local app port.
 -r --remote [remote address] - public client address
 -p --port [port] - public client port. You can use any unassigned port.
 EOF

@@ -22,9 +22,12 @@ socat
 
 ### Run on client side on [remote address]:
 ```
-./tunnel-server.sh [port] [local port]
+./server.sh -h|--help |(-l|--local-port [local listener port] -p|--port [port])
 ```
-[port] - public ssh client port. You can use any unassigned port
 
-[local port] - port to connect to ssh server. 2222 for example
+-h --help - show a help
+
+-l --local-port [local listener port] - local app port.
+
+-p --port [port] - server port. You can use any unassigned port.
 

@@ -1,50 +1,70 @@
 #!/bin/env bash
 set -Eeuo pipefail
 
-pid_file=$(mktemp --dry-run --tmpdir=/run)
+help=
+local_port=
+port=
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+    -h | --help)
+        help=1
+        ;;
+    -l | --local-port)
+        local_port="${2:-}"
+        ;;
+    -p | --port)
+        port="${2:-}"
+        ;;
+    *)
+        echo "Invalid argument '$1'"
+        exit 1
+        ;;
+    esac
+    shift
+    [[ $# -gt 0 ]] && shift
+done
 
 function main() {
-    local expect_code=301
-    while [ : ]; do
-        sleep 60
-        local code=$(curl --proxy socks5h://tor:9050 -s -o /dev/null -w "%{http_code}\n" http://facebook.com || true)
-        if [ "$expect_code" != "$code" ]; then
-            echo "Connection test faled. Response code: $code". Expected $expect_code.
-            stop_watcher
-            send_stop
-        else
-            start_watcher
-            echo "Connection test sucsessful."
-        fi
-    done
+    socat -d -d tcp-l:$local_port,reuseaddr,fork tcp-l:$port,reuseaddr
 }
 
-function start_watcher() {
-    [ -f "$pid_file" ] && return
-    nc -lk 1081 &
-    if [ "$?" -ne 0 ]; then
-        echo "Faled to start watcher"
+function validate_arguments() {
+    local error=0
+    if [ -z ${port} ]; then
+        echo "Server port parameter required"
+        error=1
+    fi
+
+    if [ -z ${local_port} ]; then
+        echo "Local lsitener port parameter required"
+        error=1
+    fi
+
+    if ! which socat 2>&1 >/dev/null; then
+        echo "Socat not found. Install socat."
+        error=1
+    fi
+
+    if [ $error -ne 0 ]; then
         exit 1
-    else
-        echo "$!" >"$pid_file"
     fi
 }
 
-function stop_watcher() {
-    [ ! -f "$pid_file" ] && return
-    kill $(cat "$pid_file")
-    rm -f "$pid_file"
+function print_help() {
+   cat <<'EOF'
+./server.sh -h|--help |(-l|--local-port [local listener port] -p|--port [port])
+
+-h --help - show a help
+-l --local-port [local listener port] - local app port.
+-p --port [port] - server port. You can use any unassigned port.
+EOF
 }
 
-function send_stop(){
-   echo stop | nc tor 1111 || true 
-}
+if [ ! -z ${help:-} ]; then
+    print_help
+    exit 0
+fi
 
-function stop() {
-    pkill curl || true
-    stop_watcher
-}
-
-trap stop exit
-
+validate_arguments
 main

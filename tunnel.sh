@@ -37,17 +37,17 @@ function main() {
 
 function validate_arguments() {
     local error=0
-    if [ -z ${local_port+x} ]; then
+    if [ -z ${local_port} ]; then
         echo "Local port parameter required"
         error=1
     fi
 
-    if [ -z ${remote_address+x} ]; then
+    if [ -z ${remote_address} ]; then
         echo "Remote address parameter required"
         error=1
     fi
 
-    if [ -z ${remote_port+x} ]; then
+    if [ -z ${remote_port} ]; then
         echo "Remote port parameter required"
         error=1
     fi
@@ -64,11 +64,12 @@ function validate_arguments() {
 
 function print_help() {
    cat <<'EOF'
-./tunnel.sh -l|--local-port [local app port] -r|--remote [remote address] -p|--port [port] 
+./tunnel.sh -h|--help |(-l|--local-port [local app port] -r|--remote [remote address] -p|--port [port])
 
-[local app port] - local app port. 22 for ssh server.
-[remote address] - public client address
-[port] - public client port. You can use any unassigned port.
+-h|--help - show a help
+-l|--local-port [local app port] - local app port. 22 for ssh server.
+-r|--remote [remote address] - public client address
+-p|--port [port] - public client port. You can use any unassigned port.
 EOF
 }
 

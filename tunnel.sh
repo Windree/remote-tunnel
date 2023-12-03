@@ -30,9 +30,7 @@ while [ $# -gt 0 ]; do
 done
 
 function main() {
-    while [ : ]; do
-        socat -d -d tcp:$remote_address:$remote_port,forever,intervall=1,fork,reuseaddr tcp:localhost:$local_port
-    done
+    socat -d -d tcp:$remote_address:$remote_port,forever,intervall=1,fork,reuseaddr tcp:localhost:$local_port
 }
 
 function validate_arguments() {
@@ -63,7 +61,7 @@ function validate_arguments() {
 }
 
 function print_help() {
-   cat <<'EOF'
+    cat <<'EOF'
 ./tunnel.sh -h|--help |(-l|--local-port [local app port] -r|--remote [remote address] -p|--port [port])
 
 -h --help - show a help

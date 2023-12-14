@@ -1,9 +1,9 @@
 #!/bin/env bash
 set -Eeuo pipefail
 
-help=
-local_port=
-port=
+unset -v help
+unset -v local_port
+unset -v port
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -31,13 +31,13 @@ function main() {
 
 function validate_arguments() {
     local error=0
-    if [ -z ${port} ]; then
-        echo "Server port parameter required"
+    if [ ! -v port ] || [ -z $port ]; then
+        echo "Server port parameter required."
         error=1
     fi
 
-    if [ -z ${local_port} ]; then
-        echo "Local lsitener port parameter required"
+    if [ ! -v local_port ] || [ -z $local_port ]; then
+        echo "Local listener port parameter required."
         error=1
     fi
 
@@ -52,8 +52,8 @@ function validate_arguments() {
 }
 
 function print_help() {
-   cat <<'EOF'
-./server.sh -h|--help |(-l|--local-port [local listener port] -p|--port [port])
+    cat <<'EOF'
+./server.sh -h|--help | (-l|--local-port [local listener port] -p|--port [port])
 
 -h --help - show a help
 -l --local-port [local listener port] - local app port.
@@ -61,7 +61,7 @@ function print_help() {
 EOF
 }
 
-if [ ! -z ${help:-} ]; then
+if [ -v help ]; then
     print_help
     exit 0
 fi

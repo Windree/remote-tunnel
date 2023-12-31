@@ -61,10 +61,9 @@ function print_help() {
 EOF
 }
 
-if [ -v help ]; then
+if [ -v help ] || ! validate_arguments; then
     print_help
     exit 0
 fi
 
-validate_arguments
 main

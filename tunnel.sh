@@ -71,10 +71,9 @@ function print_help() {
 EOF
 }
 
-if [ ! -z ${help:-} ]; then
+if [ ! -z ${help:-} ] || ! validate_arguments; then
     print_help
     exit 0
 fi
 
-validate_arguments
 main

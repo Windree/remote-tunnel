@@ -32,7 +32,7 @@ function main() {
 function validate_arguments() {
     local error=0
     if [ ! -v port ] || [ -z $port ]; then
-        echo "Server port parameter required."
+        echo "Server and port parameter required."
         error=1
     fi
 

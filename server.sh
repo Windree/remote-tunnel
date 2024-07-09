@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 set -Eeuo pipefail
 
 unset -v help
@@ -32,7 +32,7 @@ function main() {
 function validate_arguments() {
     local error=0
     if [ ! -v port ] || [ -z $port ]; then
-        echo "Server and port parameter required."
+        echo "Server port parameter required."
         error=1
     fi
 

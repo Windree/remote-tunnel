@@ -26,7 +26,7 @@ while [ $# -gt 0 ]; do
 done
 
 function main() {
-    socat -d tcp-l:$local_port,reuseaddr,fork tcp-l:$port,reuseaddr
+    socat -dd tcp4-l:$local_port,reuseaddr,fork tcp4-l:$port,reuseaddr
 }
 
 function validate_arguments() {

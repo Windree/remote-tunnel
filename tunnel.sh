@@ -30,7 +30,9 @@ while [ $# -gt 0 ]; do
 done
 
 function main() {
-    socat -d tcp:$remote_address:$remote_port,forever,intervall=1,fork,reuseaddr tcp:localhost:$local_port
+    while true; do
+        socat -d tcp:$remote_address:$remote_port,forever,intervall=1,fork,reuseaddr tcp:localhost:$local_port || true
+    done
 }
 
 function validate_arguments() {

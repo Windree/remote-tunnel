@@ -1,10 +1,10 @@
 # remote-tunnel
 Remote tunnel to access ssh sever behind NAT using client public address
 
-# Requres
+# Requires
 socat
 
-## Instalation
+## Installation
 ### Run on ssh server:
 ```
 ./tunnel.sh -h|--help |(-l|--local-port [local app port] -r|--remote [remote address] -p|--port [port])
